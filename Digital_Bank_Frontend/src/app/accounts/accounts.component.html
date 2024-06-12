@@ -1,0 +1,148 @@
+<div class="container py-5">
+    <div class="row">
+        <h2 class="text-center mb-3">Page Accounts</h2>
+        <div class="col col-md-6">
+            <div class="card">
+                <div class="card-header text-capitalize">accounts  : </div>
+                <div class="card-body">
+                    <!-- {{ accountForm.value | json }} -->
+                    <form [formGroup]="accountForm" (ngSubmit)="handleSearchAccount()" class="mt-2 mb-3">
+                        <div class="input-group mb-2">
+                            <label class="input-group-text">Account ID : </label>
+                            <input type="search" class="form-control" formControlName="accountId" (input)="onInputChange()">
+                            <button class="btn btn-primary" [disabled]="!accountForm.valid">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                        <span class="text-danger" 
+                            *ngIf="accountForm.controls['accountId'].errors && accountForm.controls['accountId'].touched">
+                            {{accountService.getErrorMessage("Account Id",accountForm.controls['accountId'].errors)}}
+                        </span>
+                    </form>
+                    <ng-template #ErrorsOrLoading>
+        
+                        <div class="text-danger" *ngIf="errorMessage">
+                           Error : {{errorMessage}}
+                        </div>
+                        
+                        <ng-template *ngIf="">
+                            <div>
+                                Loading ....
+                            </div>
+                        </ng-template>
+                    
+                    </ng-template>               
+                    <ng-container *ngIf="(this.accountForm.value.accountId != null && this.accountForm.value.accountId.length > 10) && (accountObservable | async) as accountDetails; else ErrorsOrLoading">
+                        <div class="mb-2">
+                            <label class="text-capitalize">- account id : </label>
+                            <label class="ms-1">
+                                <strong>{{accountDetails.accountId}}</strong>
+                            </label>
+                        </div>
+                        <div class="mb-2">
+                            <label class="text-capitalize">- balance : </label>
+                            <label class="ms-1"> 
+                                <strong>{{accountDetails.balance | number : "1.2-2"}}</strong>
+                            </label>
+                        </div>
+                        <table class="table table-hover table-responsive">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date Operation</th>
+                                    <th>Type Operat</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="accountDetails.accountOperationDTOS.length > 0; else listeVide">
+                                    <tr *ngFor="let op of accountDetails.accountOperationDTOS">
+                                        <td>{{op.id}}</td>
+                                        <td>{{op.operationDate | date : "dd/MM/YYYY HH:mm:ss"}}</td>
+                                        <td>{{op.type}}</td>
+                                        <td>{{op.amount | number : "1.2-2"}} DH</td>
+                                        <td>{{op.description}}</td>
+                                    </tr>                                
+                                </ng-container>
+                                <ng-template #listeVide>
+                                    <tr>
+                                        <td [colSpan]="5" class="text-center">No Operation Found</td>
+                                    </tr>
+                                </ng-template>            
+                            </tbody>
+                        </table>
+                        <ul class="nav nav-pills">
+                            <li *ngFor="let i of [].constructor(accountDetails.totalPages); let page = index">
+                                <a [ngClass]="page == currentPage ? 'btn-info' : 'btn-outline-info' "
+                                (click)="goToPage(page)" class="btn me-2">
+                                    {{page + 1}}
+                                </a>
+                            </li>
+                        </ul>
+                    </ng-container>
+                </div>
+            </div>    
+        </div>
+        <div class="col col-md-6" *ngIf="this.accountForm.value.accountId != null && this.accountForm.value.accountId.length > 10 && accountData">
+            <div class="card">
+                <div class="card-header">Operations :</div>
+                <div class="card-body">
+                    <ng-container *ngIf="errorMessage">
+                        <div class="text-danger mb-3" *ngIf="errorMessage">
+                            <i class="bi bi-x-octagon-fill me-2"></i>
+                            <span class="fw-medium">Error : {{errorMessage}}</span>
+                        </div>        
+                    </ng-container>
+                    <form method="post" [formGroup]="operationForm" (submit)="handleAccountOperations()">
+                        <!-- {{operationForm.controls['operationType'].errors | json}} -->
+                        <label class="mb-2">Opération Type <span class="text-danger fw-bold">*</span> :</label>
+                        <div class="mb-3">
+                            <ng-container *ngIf="authService.roles.includes('ADMIN')">
+                                <div class="form-check form-check-inline me-5">
+                                    <label for="CREDIT" class="form-check-label text-capitalize">crédit</label>
+                                    <input type="radio" class="form-check-input" id="CREDIT" formControlName="operationType" value="CREDIT">
+                                </div>    
+                                <div class="form-check form-check-inline me-5">
+                                    <label for="DEBIT" class="form-check-label text-capitalize">débit</label>
+                                    <input type="radio" class="form-check-input" id="DEBIT" formControlName="operationType" value="DEBIT">
+                                </div>                                    
+                            </ng-container>
+                            <div class="form-check form-check-inline">
+                                <label for="TRANSFER" class="form-check-label text-capitalize">transfer</label>
+                                <input type="radio" class="form-check-input" id="TRANSFER" formControlName="operationType" value="TRANSFER">
+                            </div>
+                        </div>
+                        <span class="text-danger mt-2" 
+                            *ngIf="operationForm.controls['operationType'].errors && operationForm.controls['operationType'].touched">
+                            {{accountService.getErrorMessage("Operation Type",operationForm.controls['operationType'].errors)}}
+                        </span>
+                        <form [formGroup]="accountDestinationForm">
+                            <div class="mb-3" *ngIf="operationForm.value.operationType == 'TRANSFER'">
+                                <label class="form-label text-capitalize">account destination <span class="text-danger fw-bold">*</span> : </label>
+                                <input type="text" class="form-control" formControlName="accountDestination">
+                                <span class="text-danger mt-2" 
+                                    *ngIf="accountDestinationForm.controls['accountDestination'].errors && accountDestinationForm.controls['accountDestination'].touched">
+                                    {{accountService.getErrorMessage("Account Destination",accountDestinationForm.controls['accountDestination'].errors)}}
+                                </span>
+                            </div> 
+                        </form>
+                        <div class="mb-3">
+                            <label class="form-label text-capitalize">amount <span class="text-danger fw-bold">*</span> : </label>
+                            <input type="text" class="form-control" formControlName="amount">
+                            <span class="text-danger mt-2" 
+                                *ngIf="operationForm.controls['amount'].errors && operationForm.controls['amount'].touched">
+                                {{accountService.getErrorMessage("Amount",operationForm.controls['amount'].errors)}}
+                            </span>
+                        </div>    
+                        <div class="mb-3">
+                            <label class="form-label text-capitalize">description : </label>
+                            <input type="text" class="form-control" formControlName="description">
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 mt-3" [disabled]="!operationForm.valid || (operationForm.value.operationType === 'TRANSFER' && !accountDestinationForm.valid)">Save</button>   
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

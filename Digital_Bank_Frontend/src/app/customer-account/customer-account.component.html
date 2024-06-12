@@ -1,0 +1,42 @@
+<div class="container py-5">
+    <h2 class="text-center mb-3">Customer Account</h2>
+    <ng-template #Errors>
+        <div class="text-danger mb-3" *ngIf="errorMessage">
+            <i class="bi bi-x-octagon-fill me-2"></i>
+            <span class="fw-medium">Error : {{errorMessage}}</span>
+        </div>
+    </ng-template>
+    <div class="card" *ngIf="customerAccounts | async as CustomerAccounts; else Errors">
+        <div class="card-header">Customer Accounts :</div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover text-center table-responsive">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <ng-container>
+                            <th>Type Account</th>
+                            <th>Accounts</th>
+                            <th>Actions</th>
+                        </ng-container>
+                    </tr>
+                </thead>
+                <tbody *ngIf="customer">
+                    <tr>
+                        <td rowspan="3">{{customer.firstName + " " +customer.lastName}}</td>
+                    </tr>
+                    <tr *ngFor="let c of customerAccounts | async">
+                        <ng-container>
+                            <td>{{c.type}}</td>
+                            <td>{{c.id}}</td>
+                            <td>
+                                <button class="btn btn-success fw-medium" (click)="handleTransaction(c.id)">
+                                    Transaction <i class="bi bi-currency-dollar"></i>
+                                </button>
+                            </td>
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>        
+</div>

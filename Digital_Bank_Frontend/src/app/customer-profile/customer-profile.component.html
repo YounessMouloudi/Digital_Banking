@@ -1,0 +1,84 @@
+<div class="container py-5" *ngIf="customerProfile | async">
+    <h1 class="text-center text-capitalize">
+        welcome {{currentAcc.customerDTO.firstName +" "+ currentAcc.customerDTO.lastName}}
+    </h1>
+    <div class="row py-5">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center text-capitalize">profile information</h3>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-hover table-responsive">
+                        <tbody class="text-center">
+                            <tr>
+                                <th>Current Account :</th>
+                                <td>{{currentAcc.id}}</td>
+                            </tr>
+                            <tr>
+                                <th>Balance :</th>
+                                <td>{{currentAcc.balance}} DH</td>
+                            </tr>
+                            <tr>
+                                <th>First Name :</th>
+                                <td>{{currentAcc.customerDTO.firstName}}</td>
+                            </tr>
+                            <tr>
+                                <th>Last Name :</th>
+                                <td>{{currentAcc.customerDTO.lastName}}</td>
+                            </tr>
+                            <tr>
+                                <th>Email :</th>
+                                <td>{{currentAcc.customerDTO.email}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cin :</th>
+                                <td>{{currentAcc.customerDTO.cin}}</td>
+                            </tr>
+                            <tr>
+                                <th>Phone :</th>
+                                <td>{{currentAcc.customerDTO.phone}}</td>
+                            </tr>
+                            <tr>
+                                <th>Address :</th>
+                                <td>{{currentAcc.customerDTO.address}}</td>
+                            </tr>
+                            <tr>
+                                <th>Saving Account :</th>
+                                <td>{{savingAcc.id}}</td>
+                            </tr>
+                            <tr>
+                                <th>Balance :</th>
+                                <td>{{savingAcc.balance}} DH</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="d-flex">
+                        <button class="btn btn-success w-100 me-3" (click)="handleEditProfile(currentAcc.customerDTO.id)">
+                            Edit Profile <i class="bi bi-pencil"></i>
+                        </button>
+                        <button class="btn btn-primary w-100 me-3" (click)="handleTransfer(currentAcc.id)">
+                            Transfer From Current Acc <i class="bi bi-currency-dollar"></i>
+                        </button>    
+                        <button class="btn btn-dark w-100" (click)="handleTransfer(savingAcc.id)">
+                            Transfer From Saving Acc <i class="bi bi-currency-dollar"></i>
+                        </button>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center text-capitalize">last opérations</h3>
+                </div>
+                <div class="card-body mx-auto">
+                    <img src="../../assets/customer-service.png" alt="" width="150px">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

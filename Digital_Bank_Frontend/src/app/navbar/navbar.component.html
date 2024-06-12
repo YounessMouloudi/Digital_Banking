@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink="/digitalBank">Home</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+          <li class="nav-item" *ngIf="authService.roles == 'USER'">
+            <a class="nav-link" routerLink="/digitalBank/customer-profile" routerLinkActive="active text-primary">Profile</a>
+          </li>
+          <li class="nav-item" *ngIf="authService.roles.includes('ADMIN')">
+            <a class="nav-link" routerLink="/digitalBank/customers" routerLinkActive="active text-primary">Customers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/digitalBank/accounts" routerLinkActive="active text-primary">Accounts</a>
+          </li>
+          <li class="nav-item dropdown" *ngIf="authService.roles.includes('ADMIN')">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Actions
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="text-white dropdown-item" routerLink="/digitalBank/new/customer">New Customer</a></li>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav" *ngIf="authService.isAuthenticated">
+            <li class="nav-item dropdown me-3">
+                <a class="nav-link active text-capitalize dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{authService.username}}
+                </a>
+                <ul class="dropdown-menu menu-right">
+                    <li *ngIf="authService.roles == 'USER'">
+                        <a class="text-white text-capitalize dropdown-item" routerLink="/digitalBank/update-password">Update Password</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="dropdown-item text-capitalize text-white btn" (click)="handleLogout()">
+                            Log Out <i class="bi bi-box-arrow-right fs-5 ms-2 text-danger"></i>
+                        </a>
+                    </li>                
+                </ul>
+            </li>
+        </ul>
+      </div>
+    </div>
+</nav>

@@ -1,0 +1,74 @@
+<div class="container py-5">
+    <div class="col-md-6 offset-3">
+        <div class="card">
+            <div class="card-header">Edit Customer : </div>
+            <div class="card-body">
+                <div class="text-danger mb-2" *ngIf="errorMessage">
+                    <i class="bi bi-x-octagon-fill me-2"></i>
+                    <span class="fw-medium">Error : {{errorMessage}}</span>
+                </div>
+                <!-- {{ editCustomerForm.value| json }} -->
+                <form [formGroup]="editCustomerForm" *ngIf="editCustomerForm" (ngSubmit)="handleUpdateCustomer()" class="mt-2">
+                    <div class="mb-3">
+                        <label for="" class="form-label">Fisrt Name : </label>
+                        <input type="text" class="form-control" formControlName="firstName">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['firstName'].errors && editCustomerForm.controls['firstName'].touched">
+                            {{customerService.getErrorMessage("First Name",editCustomerForm.controls['firstName'].errors)}}
+                            <!-- {{editCustomerForm.controls['firstName'].errors | json}} -->
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Last Name : </label>
+                        <input type="text" class="form-control" formControlName="lastName">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['lastName'].errors && editCustomerForm.controls['lastName'].touched">
+                            {{customerService.getErrorMessage("Last Name",editCustomerForm.controls['lastName'].errors)}}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Email : </label>
+                        <input type="email" class="form-control" formControlName="email">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['email'].errors && editCustomerForm.controls['email'].touched">
+                            {{customerService.getErrorMessage("Email",editCustomerForm.controls['email'].errors)}}
+                        </span>
+                    </div>
+                    <div class="mb-3" *ngIf="authService.roles.includes('ADMIN')">
+                        <label for="" class="form-label">Password :</label>
+                        <input type="password" class="form-control" formControlName="password">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['password'].errors && editCustomerForm.controls['password'].touched">
+                            {{customerService.getErrorMessage("Password",editCustomerForm.controls['password'].errors)}}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Phone : </label>
+                        <input type="text" class="form-control" formControlName="phone" placeholder="0600112233">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['phone'].errors && editCustomerForm.controls['phone'].touched">
+                            {{customerService.getErrorMessage("Phone",editCustomerForm.controls['phone'].errors)}}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">CIN : </label>
+                        <input type="text" class="form-control" formControlName="cin" [readOnly]="authService.roles == 'USER'">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['cin'].errors && editCustomerForm.controls['cin'].touched">
+                            {{customerService.getErrorMessage("CIN",editCustomerForm.controls['cin'].errors)}}
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">Address : </label>
+                        <input type="text" class="form-control" formControlName="address">
+                        <span class="text-danger mt-2" 
+                            *ngIf="editCustomerForm.controls['address'].errors && editCustomerForm.controls['address'].touched">
+                            {{customerService.getErrorMessage("Address",editCustomerForm.controls['address'].errors)}}
+                        </span>
+                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="!editCustomerForm.valid">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
